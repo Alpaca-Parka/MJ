@@ -2,49 +2,41 @@ package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ContentUris;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Debug;
-import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.MediaController;
 import android.widget.VideoView;
 
+import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
-import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-
+import com.google.android.exoplayer2.util.Util;
 
 public class VideoActivity extends AppCompatActivity {
     VideoView vv;
-    PlayerView pv;
-    SimpleExoPlayer player;
-    PlayerControlView pvc;
     String Path;
     Uri videoUri;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_exo);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
         Path = intent.getStringExtra("text");
         videoUri = Uri.parse(Path);
 
+        //Path = "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4";
+        //videoUri = Uri.parse(Path);
+
+        Log.d("test(Path)", ":"+Path);
+        Log.d("test(Uri)", ":"+videoUri);
 
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        pv = findViewById(R.id.pv);
-        pvc = findViewById(R.id.pvc);
+        //videoview 예제
         /*
         vv= findViewById(R.id.vv);
         vv.setMediaController(new MediaController(this));
@@ -52,30 +44,23 @@ public class VideoActivity extends AppCompatActivity {
         vv.setVideoPath(Path);
         vv.start();*/
 
-    }
+        //exoPlayer
+        PlayerView playerView = findViewById(R.id.pv);
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+        SimpleExoPlayer simpleExoPlayer = new SimpleExoPlayer.Builder(this).build();
+        playerView.setPlayer(simpleExoPlayer);
 
-        player = new SimpleExoPlayer.Builder(this.getApplicationContext()).build();
-        pv.setPlayer(player);
-        pvc.setPlayer(player);
+        MediaItem mediaItem = MediaItem.fromUri(videoUri);
 
-        DataSource.Factory factory = new DefaultDataSourceFactory(this, "Ex89VideoAndExoPlayer");
-        ProgressiveMediaSource mediaSource = new ProgressiveMediaSource.Factory(factory).createMediaSource(videoUri);
+        String userAgent = Util.getUserAgent(this,getApplicationInfo().name);
+        DefaultDataSourceFactory factory = new DefaultDataSourceFactory(this, userAgent);
+        ProgressiveMediaSource progressiveMediaSource = new ProgressiveMediaSource.Factory(factory).createMediaSource(mediaItem);
 
-        player.prepare(mediaSource);
-        player.setPlayWhenReady(true);
-        Log.d("123",Path);
-    }
+        simpleExoPlayer.setMediaSource(progressiveMediaSource);
 
-    @Override
-    protected void onStop() {
-        super.onStop();
+        simpleExoPlayer.prepare();
 
-        pv.setPlayer(null);
-        player.release();
-        player=null;
+        simpleExoPlayer.play();
+
     }
 }

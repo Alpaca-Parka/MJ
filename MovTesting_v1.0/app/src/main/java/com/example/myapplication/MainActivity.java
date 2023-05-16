@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                     if(f.isDirectory()){//디렉토리면?
                         mCurrent = Path;//현재를 Path로 바꿔줌
                         refreshFiles();//리프레쉬
-                    }else{//디렉토리가 아니면 토스트 메세지를 뿌림
+                    }else{//디렉토리가 아니면 동영상 주소를 세컨드 액티비티에 넘김
                         Intent intent = new Intent(MainActivity.this,VideoActivity.class );
                         intent.putExtra("text",Path);
                         startActivity(intent);
