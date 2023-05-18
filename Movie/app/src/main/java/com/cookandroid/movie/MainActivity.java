@@ -2,10 +2,12 @@ package com.cookandroid.movie;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -23,11 +25,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import org.jetbrains.annotations.NotNull;
 
 public class MainActivity extends AppCompatActivity {
-    private Permission permission;
     String mCurrent;
     String mRoot;
     TextView mCurrentTxt;
@@ -37,13 +39,14 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
     private static final String TAG = MainActivity.class.getSimpleName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        permissionCheck();
+        checkPermission();
 
         mCurrentTxt = (TextView)findViewById(R.id.current);
         mFileList = (ListView)findViewById(R.id.filelist);
@@ -141,17 +144,29 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.notifyDataSetChanged();
     }
 
-    private void permissionCheck(){
-        permission = new Permission(this, this);
-        if(!permission.checkPermission()){
-           permission.requestPermission();
+    private void checkPermission(){
+        String[] permissions;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissions = new String[]{
+                    Manifest.permission.READ_MEDIA_IMAGES,
+                    Manifest.permission.READ_MEDIA_AUDIO,
+                    Manifest.permission.READ_MEDIA_VIDEO
+            };
+        } else {
+            permissions = new String[]{
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+            };
         }
-    }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull @NotNull String[] permissions, @NonNull @NotNull int[] grantResults){
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(!permission.permissionResult(requestCode, permissions, grantResults)){
-            permission.requestPermission();
+        Log.v("test2", Arrays.toString(permissions));
+        for(String pm : permissions){
+            if(ContextCompat.checkSelfPermission(this,pm)!=PackageManager.PERMISSION_GRANTED){
+                Intent intent = new Intent(MainActivity.this, PermissionActivity.class);
+                Log.v("test1", "check");
+                startActivity(intent);
+                finish();
+                break;
+            }
         }
     }
 
