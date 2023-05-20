@@ -2,13 +2,11 @@ package com.cookandroid.movie;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Locale;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.Menu;
@@ -20,12 +18,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 
 import com.cookandroid.movie.helper.PermissionManager;
 
@@ -73,13 +69,13 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
-                    String Name = (String)arFiles.get(position);
+                    String name = (String)arFiles.get(position);
 
-                    if(Name.startsWith("[") && Name.endsWith("]")){
-                        Name = Name.substring(1, Name.length() - 1);
+                    if(name.startsWith("[") && name.endsWith("]")){
+                        name = name.substring(1, name.length() - 1);
                     }
 
-                    String Path = mCurrent + "/" + Name;
+                    String Path = mCurrent + "/" + name;
                     File f = new File(Path);
                     if(f.isDirectory()){
                         mCurrent = Path;
@@ -119,17 +115,17 @@ public class MainActivity extends AppCompatActivity {
         if(files != null){
             for(int i = 0; i < files.length;i++){
                 String Path = mCurrent + "/" + files[i];
-                String Name = "";
+                String name = "";
 
                 File f = new File(Path);
                 if(f.isDirectory()){
-                    Name = "[" + files[i] + "]";
+                    name = "[" + files[i] + "]";
                 }else{
-                    Name = files[i];
+                    name = files[i];
                 }
-
-                if (searchText.isEmpty() || Name.contains(searchText)) { // 검색어가 비어있거나 파일 이름이 검색어를 포함하면 추가
-                    arFiles.add(Name);
+                                           //대소문자 구별하려면 toLowerCase() 사용하지 말 것
+                if (searchText.isEmpty() || name.toLowerCase().contains(searchText)) { // 검색어가 비어있거나 파일 이름이 검색어를 포함하면 추가
+                    arFiles.add(name);
                 }
             }
         }
@@ -146,12 +142,12 @@ public class MainActivity extends AppCompatActivity {
         mSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener(){
             @Override
             public boolean onMenuItemActionExpand(MenuItem item){
-                refreshFiles();
+                // 검색창 확장시
                 return true;
             }
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item){
-                refreshFiles();
+                //검색창 축소시
                 return true;
             }
         });
@@ -162,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextSubmit(String query){
+                //검색버튼 클릭시
                 searchText = query;
                 refreshFiles();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -171,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             public boolean onQueryTextChange(String newText){
+                //타이핑 칠때마다
                 searchText = newText;
                 refreshFiles();
                 return true;
