@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,40 +23,34 @@ public class PermissionManager {
     private static final int REQ_CODE = 1;
     private AppCompatActivity activity;
     private View view;
-    private String[] permissions;
+    private String[] permissions = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            ? new String[]{
+            Manifest.permission.READ_MEDIA_IMAGES,
+            Manifest.permission.READ_MEDIA_AUDIO,
+            Manifest.permission.READ_MEDIA_VIDEO
+    }
+            : new String[]{
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
     public PermissionManager(AppCompatActivity activity, View view) {
         this.activity = activity;
         this.view = view;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            permissions = new String[]{
-                    Manifest.permission.READ_MEDIA_IMAGES,
-                    Manifest.permission.READ_MEDIA_AUDIO,
-                    Manifest.permission.READ_MEDIA_VIDEO
-            };
-        } else {
-            permissions = new String[]{
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-            };
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//            permissions = new String[]{
+//                    Manifest.permission.READ_MEDIA_IMAGES,
+//                    Manifest.permission.READ_MEDIA_AUDIO,
+//                    Manifest.permission.READ_MEDIA_VIDEO
+//            };
+//        } else {
+//            permissions = new String[]{
+//                    Manifest.permission.READ_EXTERNAL_STORAGE,
+//                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+//            };
+//        }
     }
     /**권한 확인*/
     public void checkPermission() {
-        String[] permissions;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            permissions = new String[]{
-                    Manifest.permission.READ_MEDIA_IMAGES,
-                    Manifest.permission.READ_MEDIA_AUDIO,
-                    Manifest.permission.READ_MEDIA_VIDEO
-            };
-        } else {
-            permissions = new String[]{
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-            };
-        }
-
         for (String pm : permissions) {
             if (ContextCompat.checkSelfPermission(activity, pm) != PackageManager.PERMISSION_GRANTED) {
                 Intent intent = new Intent(activity, PermissionActivity.class);
@@ -68,18 +63,7 @@ public class PermissionManager {
     public boolean checkPermissions() {
         SharedPreferences pref = activity.getPreferences(Context.MODE_PRIVATE);
         boolean isFirst = pref.getBoolean("IsFirst", true);
-        Snackbar snackbar = Snackbar.make(view, "text1", Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction("확인", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                Uri uri = Uri.fromParts("package", activity.getPackageName(), null);
-                intent.setData(uri);
-                activity.startActivity(intent);
-            }
-        });
-
+        Snackbar snackbar;
         for (String permission : permissions) {
             if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
