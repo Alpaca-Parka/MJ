@@ -22,6 +22,9 @@ import com.cookandroid.movie.handler.BackKeyHandler;
 import com.google.android.material.snackbar.Snackbar;
 
 public class PermissionManager {
+    /**
+     * TED Permission 사용하면 간편하게 권한 부여 가능
+     * */
     private SharedPreferences pref;
     private static final int REQ_CODE = 1;
     private final AppCompatActivity activity;

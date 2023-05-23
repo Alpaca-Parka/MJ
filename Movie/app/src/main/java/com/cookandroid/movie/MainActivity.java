@@ -19,21 +19,21 @@ import com.cookandroid.movie.helper.PermissionManager;
 
 
 public class MainActivity extends AppCompatActivity {
-    MenuItem mSearch;
-    FileManager fm;
-    private BackKeyHandler backKeyHandler = new BackKeyHandler(this);
+    private MenuItem mSearch;
+    private FileManager fm;
+    private final BackKeyHandler backKeyHandler = new BackKeyHandler(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        //권한체크
         PermissionManager pm = new PermissionManager(this, findViewById(R.id.MainView));
         pm.checkPermission();
-
+        //툴바(액션바) 생성
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
-
+        //디렉토리 리스트 생성
         fm = new FileManager(this, this);
         fm.refreshFiles();
     }
