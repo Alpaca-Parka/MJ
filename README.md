@@ -7,6 +7,8 @@ Mobile Project
     뒤로가기 키 동작
     권한체크 부여 메소드 별도의 클래스로 분리
     파일 관련 메소드 별도의 클래스로 분리
+    onCreateOptionsMenuItem(Menu menu)별도의 클래스로 분리
+    폴더 우선 정렬 체크박스 만듦
     
     
 
