@@ -1,0 +1,141 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.cookandroid.movie"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="26"
+8-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="33" />
+9-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+11-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:5:5-80
+11-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:5:22-77
+12    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+12-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:6:5-81
+12-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:6:22-78
+13    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+13-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:7:5-82
+13-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:7:22-79
+14    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+14-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:8:5-75
+14-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:8:22-72
+15    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+15-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:9:5-76
+15-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:9:22-73
+16    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+16-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:10:5-75
+16-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:10:22-72
+17    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+17-->[com.google.android.exoplayer:exoplayer-core:2.18.6] C:\Users\Admin\.gradle\caches\transforms-3\b4a001bc57764e8afcf4323a79527d93\transformed\exoplayer-core-2.18.6\AndroidManifest.xml:24:5-79
+17-->[com.google.android.exoplayer:exoplayer-core:2.18.6] C:\Users\Admin\.gradle\caches\transforms-3\b4a001bc57764e8afcf4323a79527d93\transformed\exoplayer-core-2.18.6\AndroidManifest.xml:24:22-76
+18
+19    <permission
+19-->[androidx.core:core:1.9.0] C:\Users\Admin\.gradle\caches\transforms-3\ec4f76f6c0c02de8ba18086e7bd9baf5\transformed\core-1.9.0\AndroidManifest.xml:22:5-24:47
+20        android:name="com.cookandroid.movie.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+20-->[androidx.core:core:1.9.0] C:\Users\Admin\.gradle\caches\transforms-3\ec4f76f6c0c02de8ba18086e7bd9baf5\transformed\core-1.9.0\AndroidManifest.xml:23:9-81
+21        android:protectionLevel="signature" />
+21-->[androidx.core:core:1.9.0] C:\Users\Admin\.gradle\caches\transforms-3\ec4f76f6c0c02de8ba18086e7bd9baf5\transformed\core-1.9.0\AndroidManifest.xml:24:9-44
+22
+23    <uses-permission android:name="com.cookandroid.movie.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+23-->[androidx.core:core:1.9.0] C:\Users\Admin\.gradle\caches\transforms-3\ec4f76f6c0c02de8ba18086e7bd9baf5\transformed\core-1.9.0\AndroidManifest.xml:26:5-97
+23-->[androidx.core:core:1.9.0] C:\Users\Admin\.gradle\caches\transforms-3\ec4f76f6c0c02de8ba18086e7bd9baf5\transformed\core-1.9.0\AndroidManifest.xml:26:22-94
+24
+25    <application
+25-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:12:5-40:19
+26        android:allowBackup="true"
+26-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:13:9-35
+27        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+27-->[androidx.core:core:1.9.0] C:\Users\Admin\.gradle\caches\transforms-3\ec4f76f6c0c02de8ba18086e7bd9baf5\transformed\core-1.9.0\AndroidManifest.xml:28:18-86
+28        android:dataExtractionRules="@xml/data_extraction_rules"
+28-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:14:9-65
+29        android:debuggable="true"
+30        android:extractNativeLibs="false"
+31        android:fullBackupContent="@xml/backup_rules"
+31-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:15:9-54
+32        android:icon="@mipmap/ic_launcher"
+32-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:16:9-43
+33        android:label="@string/app_name"
+33-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:17:9-41
+34        android:supportsRtl="true"
+34-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:18:9-35
+35        android:testOnly="true"
+36        android:theme="@style/Theme.Movie_v10" >
+36-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:19:9-47
+37        <activity
+37-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:21:9-23:40
+38            android:name="com.cookandroid.movie.PermissionActivity"
+38-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:22:13-47
+39            android:exported="false" />
+39-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:23:13-37
+40        <activity
+40-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:24:9-28:66
+41            android:name="com.cookandroid.movie.VideoActivity"
+41-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:25:13-42
+42            android:exported="false"
+42-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:26:13-37
+43            android:label="@string/title_activity_video"
+43-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:27:13-57
+44            android:theme="@style/Theme.Movie_v10.NoActionBar" />
+44-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:28:13-63
+45        <activity
+45-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:29:9-39:20
+46            android:name="com.cookandroid.movie.MainActivity"
+46-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:30:13-41
+47            android:exported="true"
+47-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:31:13-36
+48            android:label="@string/title_activity_main"
+48-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:32:13-56
+49            android:theme="@style/Theme.Movie_v10.NoActionBar" >
+49-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:33:13-63
+50            <intent-filter>
+50-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:34:13-38:29
+51                <action android:name="android.intent.action.MAIN" />
+51-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:35:17-69
+51-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:35:25-66
+52
+53                <category android:name="android.intent.category.LAUNCHER" />
+53-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:37:17-77
+53-->C:\Mobile\Movie\app\src\main\AndroidManifest.xml:37:27-74
+54            </intent-filter>
+55        </activity>
+56
+57        <provider
+57-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Admin\.gradle\caches\transforms-3\791b39fe68826e8543c46f2d7f8b152e\transformed\emoji2-1.2.0\AndroidManifest.xml:24:9-32:20
+58            android:name="androidx.startup.InitializationProvider"
+58-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Admin\.gradle\caches\transforms-3\791b39fe68826e8543c46f2d7f8b152e\transformed\emoji2-1.2.0\AndroidManifest.xml:25:13-67
+59            android:authorities="com.cookandroid.movie.androidx-startup"
+59-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Admin\.gradle\caches\transforms-3\791b39fe68826e8543c46f2d7f8b152e\transformed\emoji2-1.2.0\AndroidManifest.xml:26:13-68
+60            android:exported="false" >
+60-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Admin\.gradle\caches\transforms-3\791b39fe68826e8543c46f2d7f8b152e\transformed\emoji2-1.2.0\AndroidManifest.xml:27:13-37
+61            <meta-data
+61-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Admin\.gradle\caches\transforms-3\791b39fe68826e8543c46f2d7f8b152e\transformed\emoji2-1.2.0\AndroidManifest.xml:29:13-31:52
+62                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+62-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Admin\.gradle\caches\transforms-3\791b39fe68826e8543c46f2d7f8b152e\transformed\emoji2-1.2.0\AndroidManifest.xml:30:17-75
+63                android:value="androidx.startup" />
+63-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Admin\.gradle\caches\transforms-3\791b39fe68826e8543c46f2d7f8b152e\transformed\emoji2-1.2.0\AndroidManifest.xml:31:17-49
+64            <meta-data
+64-->[androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\Admin\.gradle\caches\transforms-3\86041ab2b0d2128b301212662b855cec\transformed\lifecycle-process-2.4.1\AndroidManifest.xml:31:13-33:52
+65                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+65-->[androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\Admin\.gradle\caches\transforms-3\86041ab2b0d2128b301212662b855cec\transformed\lifecycle-process-2.4.1\AndroidManifest.xml:32:17-78
+66                android:value="androidx.startup" />
+66-->[androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\Admin\.gradle\caches\transforms-3\86041ab2b0d2128b301212662b855cec\transformed\lifecycle-process-2.4.1\AndroidManifest.xml:33:17-49
+67        </provider>
+68
+69        <uses-library
+69-->[androidx.window:window:1.0.0] C:\Users\Admin\.gradle\caches\transforms-3\8f9220d66762372c6aa1e02e07b4f277\transformed\window-1.0.0\AndroidManifest.xml:25:9-27:40
+70            android:name="androidx.window.extensions"
+70-->[androidx.window:window:1.0.0] C:\Users\Admin\.gradle\caches\transforms-3\8f9220d66762372c6aa1e02e07b4f277\transformed\window-1.0.0\AndroidManifest.xml:26:13-54
+71            android:required="false" />
+71-->[androidx.window:window:1.0.0] C:\Users\Admin\.gradle\caches\transforms-3\8f9220d66762372c6aa1e02e07b4f277\transformed\window-1.0.0\AndroidManifest.xml:27:13-37
+72        <uses-library
+72-->[androidx.window:window:1.0.0] C:\Users\Admin\.gradle\caches\transforms-3\8f9220d66762372c6aa1e02e07b4f277\transformed\window-1.0.0\AndroidManifest.xml:28:9-30:40
+73            android:name="androidx.window.sidecar"
+73-->[androidx.window:window:1.0.0] C:\Users\Admin\.gradle\caches\transforms-3\8f9220d66762372c6aa1e02e07b4f277\transformed\window-1.0.0\AndroidManifest.xml:29:13-51
+74            android:required="false" />
+74-->[androidx.window:window:1.0.0] C:\Users\Admin\.gradle\caches\transforms-3\8f9220d66762372c6aa1e02e07b4f277\transformed\window-1.0.0\AndroidManifest.xml:30:13-37
+75    </application>
+76
+77</manifest>
