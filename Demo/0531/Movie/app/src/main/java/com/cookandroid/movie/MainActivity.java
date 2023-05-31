@@ -2,9 +2,10 @@ package com.cookandroid.movie;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Locale;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList arFiles;
     MenuItem mSearch; //검색
     MenuItem mSort; //정렬
+
+    boolean mSortbtn; //정렬버튼 추가
 
     String searchText = ""; // 검색어를 저장할 변수
 
@@ -113,14 +116,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     //변경전 refreshFiles 오름차순
-    /*
+
     void refreshFiles(){
         mCurrentTxt.setText(mCurrent);
         arFiles.clear();
         File current = new File(mCurrent);
         String[] files = current.list();
 
-        Array.sort(files, )
+
 
         if(files != null){
             for(int i = 0; i < files.length;i++){
@@ -139,13 +142,21 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        Collections.sort(arFiles);
+
+
+        if(mSortbtn) { //내림차순 정렬 desc
+            Collections.sort(arFiles, Comparator.reverseOrder());
+        }else { //오름차순 정렬 asc
+            Collections.sort(arFiles);
+        }
+
+
 
         mAdapter.notifyDataSetChanged();
     }
 
-     */
 
+/*
     void refreshFiles() {
         mCurrentTxt.setText(mCurrent);
         ArrayList<String> sortedFiles = new ArrayList<>();
@@ -179,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, sortedFiles);
         mFileList.setAdapter(mAdapter);
     }
-
+*/
 
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -207,6 +218,8 @@ public class MainActivity extends AppCompatActivity {
         mSort.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(@NonNull MenuItem item) {
+
+                mSortbtn = !mSortbtn; // 버튼 이 눌렸는지 체크
                 refreshFiles();
                 return true;
             }
