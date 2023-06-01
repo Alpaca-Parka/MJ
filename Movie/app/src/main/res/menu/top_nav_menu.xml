@@ -19,6 +19,12 @@
         />
 
     <item
+        android:id="@+id/delete_file"
+        android:icon="@drawable/a_delete_icon"
+        app:showAsAction="always"
+        android:title="삭제" />
+
+    <item
         android:id="@+id/foldersort"
         android:checkable="true"
         android:title="폴더 우선 정렬"

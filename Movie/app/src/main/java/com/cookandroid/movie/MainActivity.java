@@ -5,6 +5,7 @@ package com.cookandroid.movie;
 import android.os.Bundle;
 import android.view.Menu;
 
+import android.view.MenuItem;
 import android.view.View;
 
 
@@ -62,4 +63,11 @@ public class MainActivity extends AppCompatActivity {
             doubleBackPressHandler.onBackPressed();
         }
     }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return OptionsMenuHelper.onOptionsItemSelected(this, item, fm)
+                || super.onOptionsItemSelected(item);
+    }
+
+
 }

@@ -2,11 +2,14 @@ package com.cookandroid.movie.helpers;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,6 +20,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 public class FileManager {
     private final AppCompatActivity activity;
@@ -31,6 +35,10 @@ public class FileManager {
     private boolean isChecked = false;
     Comparator<String> caseInsensitiveComparator = String.CASE_INSENSITIVE_ORDER;
     Comparator<String> reverseComparator = Collections.reverseOrder(caseInsensitiveComparator);
+
+    private final List<String> selectedFiles = new ArrayList<>();
+
+    private static FileManager instance;
 
     public FileManager(AppCompatActivity _activity, Context _context) {
         this.activity = _activity;
@@ -67,6 +75,17 @@ public class FileManager {
                 refreshFiles();
             }
         };
+
+        AdapterView.OnItemLongClickListener mItemLongClickListener = (parent, view, position, id) -> {
+            String name = sortedFiles.get(position);
+            String filePath = mCurrent + "/" + name;
+            toggleFileSelection(filePath); // 파일 선택 토글
+            view.setBackgroundColor(Color.GRAY);
+            mAdapter.notifyDataSetChanged();
+            return true;
+        };
+        mFileList.setOnItemLongClickListener(mItemLongClickListener);
+
         mFileList.setOnItemClickListener(mItemClickListener);
     }
 
@@ -182,4 +201,64 @@ public class FileManager {
     public void setChecked(boolean checked) {
         isChecked = checked;
     }
+
+    public void addSelectedFile(String filePath) {
+        selectedFiles.add(filePath);
+    }
+    public AppCompatActivity getActivity() {
+        return activity;
+    }
+    //FileManager 인스턴스를 생성하는 정적 메서드
+    public static FileManager getInstance(AppCompatActivity activity, Context context) {
+        if (instance == null) {
+            instance = new FileManager(activity, context);
+        }
+        return instance;
+    }
+
+    //선택된 파일 삭제 메서드
+    public void deleteSelectedFiles() {
+        for (String filePath : selectedFiles) {
+            File file = new File(filePath);
+            if (file.delete()) {
+                Log.d("FileManager", "Deleted file: " + filePath);
+            } else {
+                Log.e("FileManager", "Failed to delete file: " + filePath);
+            }
+        }
+        selectedFiles.clear();
+        refreshFiles();
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
+    }
+
+    public boolean areFilesSelected() {
+        return !selectedFiles.isEmpty();
+    }
+
+    public void clearSelectedFiles() {
+        selectedFiles.clear();
+        refreshFiles();
+    }
+
+    // 선택된 파일 목록을 반환하는 메서드
+    public List<String> getSelectedFiles() {
+        return selectedFiles;
+    }
+
+    //파일 선택 여부 토글 메서드
+    public void toggleFileSelection(String filePath) {
+        if (selectedFiles.contains(filePath)) {
+            selectedFiles.remove(filePath);
+            showToast("파일 선택 해제됨: " + filePath);
+        } else {
+            selectedFiles.add(filePath);
+            showToast("파일 선택됨: " + filePath);
+        }
+        mAdapter.notifyDataSetChanged();
+    }
+
+
 }

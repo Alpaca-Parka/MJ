@@ -5,7 +5,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 
@@ -78,6 +80,30 @@ public class OptionsMenuHelper {
 
         });
         return true;
+    }
+
+    public static boolean onOptionsItemSelected(AppCompatActivity activity, MenuItem item, FileManager fileManager) {
+        int id = item.getItemId();
+        if (id == R.id.delete_file) {
+            if (fileManager.areFilesSelected()) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setMessage("정말로 선택된 파일을 삭제하시겠습니까?")
+                        .setPositiveButton("예", (dialog, which) -> {
+                            fileManager.deleteSelectedFiles();
+                            fileManager.clearSelectedFiles();
+                            Toast.makeText(activity, "선택된 파일이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                        })
+                        .setNegativeButton("아니오", (dialog, which) -> {
+                            dialog.dismiss();
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            } else {
+                Toast.makeText(activity, "선택된 파일이 없습니다.", Toast.LENGTH_SHORT).show();
+            }
+            return true;
+        }
+        return false;
     }
 
 
