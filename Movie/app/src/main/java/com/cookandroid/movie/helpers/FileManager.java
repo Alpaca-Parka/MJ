@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
 import android.util.Log;
-import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -212,7 +212,7 @@ public class FileManager {
     public AppCompatActivity getActivity() {
         return activity;
     }
-    // 추가된 코드: FileManager 인스턴스를 생성하는 정적 메서드
+    //FileManager 인스턴스를 생성하는 정적 메서드
     public static FileManager getInstance(AppCompatActivity activity, Context context) {
         if (instance == null) {
             instance = new FileManager(activity, context);
@@ -220,7 +220,7 @@ public class FileManager {
         return instance;
     }
 
-    // 추가된 코드: 선택된 파일 삭제 메서드
+    //선택된 파일 삭제 메서드
     public void deleteSelectedFiles() {
         for (String filePath : selectedFiles) {
             File file = new File(filePath);
@@ -232,6 +232,10 @@ public class FileManager {
         }
         selectedFiles.clear();
         refreshFiles();
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
     }
 
     public boolean areFilesSelected() {
@@ -248,15 +252,15 @@ public class FileManager {
         return selectedFiles;
     }
 
-    // 추가된 코드: 파일 선택 여부 토글 메서드
+    //파일 선택 여부 토글 메서드
     public void toggleFileSelection(String filePath) {
         if (selectedFiles.contains(filePath)) {
             selectedFiles.remove(filePath);
+            showToast("파일 선택 해제됨: " + filePath);
         } else {
             selectedFiles.add(filePath);
+            showToast("파일 선택됨: " + filePath);
         }
+        mAdapter.notifyDataSetChanged();
     }
-
-
-
 }

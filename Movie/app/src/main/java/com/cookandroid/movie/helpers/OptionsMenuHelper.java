@@ -12,9 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 
 import com.cookandroid.movie.R;
-
-import java.io.File;
-
 public class OptionsMenuHelper {
     public static boolean onCreateOptionsMenu(Menu menu, FileManager fm, Context context){
 
