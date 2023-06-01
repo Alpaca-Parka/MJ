@@ -1,2 +1,2 @@
 # MJ
-Mobile Project
+Layout, Delete 추가
