@@ -18,9 +18,7 @@ import com.cookandroid.movie.PermissionActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 public class PermissionManager {
-    /**
-     * TED Permission 사용하면 간편하게 권한 부여 가능
-     */
+    /** TED Permission 사용하면 간편하게 권한 부여 가능 */
 
     private static final int REQ_CODE = 1;
     private final AppCompatActivity activity;
@@ -31,7 +29,7 @@ public class PermissionManager {
             Manifest.permission.READ_MEDIA_AUDIO,
             Manifest.permission.READ_MEDIA_VIDEO
     }
-            : new String[]{//api 31 미만이면 이러한 권한 부여
+            : new String[]{//api 33 미만이면 이러한 권한 부여
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
@@ -41,9 +39,7 @@ public class PermissionManager {
         this.view = view;
     }
 
-    /**
-     * 권한 확인
-     */
+    /** 권한 확인 */
     public void checkPermission() {
         for (String pm : permissions) {//foreach로 권한 부여확인
             if (ContextCompat.checkSelfPermission(activity, pm) != PackageManager.PERMISSION_GRANTED) {
@@ -56,9 +52,7 @@ public class PermissionManager {
         }
     }
 
-    /**
-     * 권한 부여 확인
-     */
+    /** 권한 부여 확인 */
     public boolean checkPermissions() {
 
         Snackbar snackbar;
@@ -83,12 +77,12 @@ public class PermissionManager {
         }
         return true;
     }
-    /**권한 (승인 || 거절) 확인*/
+    /** 권한 (승인 || 거절) 확인 */
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if ((requestCode == REQ_CODE) && (grantResults.length > 0)) {
             for(int i = 0; i < grantResults.length; i++) {
                 //앱 권한 수락시 메인 액티비티로 가기
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                     Intent intent = new Intent(activity, MainActivity.class);
                     activity.startActivity(intent);
                     activity.finish();

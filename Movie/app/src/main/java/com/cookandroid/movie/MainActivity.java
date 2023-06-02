@@ -4,10 +4,8 @@ package com.cookandroid.movie;
 
 import android.os.Bundle;
 import android.view.Menu;
-
 import android.view.View;
-
-
+import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -16,7 +14,6 @@ import com.cookandroid.movie.helpers.DoubleBackPressHandler;
 import com.cookandroid.movie.helpers.FileManager;
 import com.cookandroid.movie.helpers.OptionsMenuHelper;
 import com.cookandroid.movie.helpers.PermissionManager;
-
 
 public class MainActivity extends AppCompatActivity {
     private FileManager fm;
@@ -34,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
 
-        //디렉토리 리스트 생성
+        //파일 매니저 생성
         fm = new FileManager(this,this);
         fm.refreshFiles();
     }
@@ -61,5 +58,12 @@ public class MainActivity extends AppCompatActivity {
             //루트면 앱종료
             doubleBackPressHandler.onBackPressed();
         }
+    }
+
+    //
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return OptionsMenuHelper.onOptionsItemSelected(this, item, fm)
+                || super.onOptionsItemSelected(item);
     }
 }

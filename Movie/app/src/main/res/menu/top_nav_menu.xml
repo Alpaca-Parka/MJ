@@ -25,4 +25,10 @@
         app:showAsAction="never"
         app:actionViewClass="android.widget.CheckBox"/>
 
+    <item
+        android:id="@+id/delete_file"
+        android:icon="@drawable/a_delete_icon"
+        app:showAsAction="always"
+        android:title="삭제" />
+
 </menu>

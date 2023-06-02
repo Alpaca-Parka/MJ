@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/PermissionActivity"
@@ -7,24 +7,41 @@
     android:layout_height="match_parent"
     tools:context=".PermissionActivity">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/app_bar_permission"
+            app:title="Permission"
+            />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
     <Button
         android:id="@+id/PermissionBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
         android:text="권한부여확인"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_below="@+id/textView"
+        android:layout_alignRight="@+id/textView"
+        android:textSize="17dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+
+        />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="68dp"
-        android:layout_marginEnd="67dp"
-        android:text="이앱을 사용하시려면 권한을 허락해야합니다.\n권한을 부여하시려면 버튼을 클릭하여 주십시오.\n\n\n\n\n저장공간을 읽고 쓰는 기능 이외 다른용도로는 \n사용하지 않습니다. 어쩌구저쩌구"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="145dp" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:text="이앱을 사용하시려면 권한을 허락해야합니다.\n권한을 부여하시려면 버튼을 클릭하여 주십시오.\n\n\n저장공간을 읽고 쓰는 기능 이외 다른용도로는 \n사용하지 않습니다."
+        tools:layout_editor_absoluteY="145dp"
+        android:textStyle="bold"
+        android:textSize="17dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>
