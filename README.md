@@ -46,3 +46,6 @@ onCreateOptionsMenuItem(Menu menu) 메소드 별도의 클래스 파일로 분�
 확장자 확인 처리 구현
 삭제기능 최적화
 롱클릭 시 배경색 변경 구현
+
+6/3
+API 29이상일 때 SAF로 파일 권한 부여 후 파일 삭제 처리 구현
