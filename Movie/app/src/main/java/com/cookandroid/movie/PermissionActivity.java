@@ -42,6 +42,7 @@ public class PermissionActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         permissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
+
     @Override
     public void onBackPressed() {
         doubleBackPressHandler.onBackPressed();

@@ -2,15 +2,21 @@ package com.cookandroid.movie.helpers;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
-import android.util.Log;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.documentfile.provider.DocumentFile;
+
 
 import com.cookandroid.movie.R;
 import com.cookandroid.movie.VideoActivity;
@@ -22,27 +28,35 @@ import java.util.Comparator;
 import java.util.List;
 
 public class FileManager {
+    private final static int REQUEST_DELETE_FILE = 1;
     private final AppCompatActivity activity;
-
-    private String mCurrent;
     private final String mRoot;
+    private String mCurrent;
     private String searchText = "";
     private final TextView mCurrentTxt;
     private final ArrayAdapter<String> mAdapter;
-    //private ArrayList arFiles;
     private final ArrayList<String> sortedFiles;
+    private final ArrayList<View> selectedViews;
+    private final List<String> selectedFiles = new ArrayList<>();
     private boolean isSort = false;
     private boolean isChecked = false;
-    Comparator<String> caseInsensitiveComparator = String.CASE_INSENSITIVE_ORDER;
-    Comparator<String> reverseComparator = Collections.reverseOrder(caseInsensitiveComparator);
+    private final Comparator<String> caseInsensitiveComparator = String.CASE_INSENSITIVE_ORDER;
+    private final Comparator<String> reverseComparator = Collections.reverseOrder(caseInsensitiveComparator);
 
+
+    /**
+     * 생성자
+     * 클릭 리스너
+     * 롱 클릭 리스너
+     */
     public FileManager(AppCompatActivity _activity, Context _context) {
         this.activity = _activity;
 
-        mCurrentTxt = (TextView) activity.findViewById(R.id.current);
-        ListView mFileList = (ListView) activity.findViewById(R.id.filelist);
+        mCurrentTxt = activity.findViewById(R.id.current);
+        ListView mFileList = activity.findViewById(R.id.filelist);
 
         sortedFiles = new ArrayList<>();
+        selectedViews = new ArrayList<>();
         mRoot = Environment.getExternalStorageDirectory().getAbsolutePath();
         mCurrent = mRoot;
 
@@ -51,7 +65,7 @@ public class FileManager {
 
 
         AdapterView.OnItemClickListener mItemClickListener = (parent, view, position, id) -> {
-            String name = (String) sortedFiles.get(position);//현재 디렉토리의 위치를 가져옴
+            String name = sortedFiles.get(position);//현재 디렉토리의 위치를 가져옴
 
             if (name.startsWith("[") && name.endsWith("]")) {
                 name = name.substring(1, name.length() - 1);
@@ -65,10 +79,19 @@ public class FileManager {
                 refreshFiles();
             } else {
                 //파일일 경우 동작
-                Intent intent = new Intent(activity, VideoActivity.class);
-                intent.putExtra("text", Path);
-                activity.startActivity(intent);
-                refreshFiles();
+                String extension = getFileExtension(name);
+                if (extension != null && isSupportedExtension(extension)) {
+                    //실행할 수 있는 확장자일 경우 동작
+                    Intent intent = new Intent(activity, VideoActivity.class);
+                    intent.putExtra("text", Path);
+                    activity.startActivity(intent);
+                    refreshFiles();
+                } else {
+                    //실행할 수 없는 확장자일 경우 동작
+                    Toast.makeText(activity, "실행할 수 있는 파일이 아닙니다.", Toast.LENGTH_SHORT).show();
+                }
+
+
             }
         };
         mFileList.setOnItemClickListener(mItemClickListener);
@@ -76,7 +99,7 @@ public class FileManager {
         AdapterView.OnItemLongClickListener mItemLongClickListener = (parent, view, position, id) -> {
             String name = sortedFiles.get(position);
             String filePath = mCurrent + "/" + name;
-            toggleFileSelection(filePath); // 파일 선택 토글
+            toggleFileSelection(filePath, view); // 파일 선택 토글
             mAdapter.notifyDataSetChanged();
             return true;
         };
@@ -84,11 +107,14 @@ public class FileManager {
 
     }
 
-
+    /** 파일매니저 기본처리 메서드 */
     public void refreshFiles() {
         mCurrentTxt.setText(mCurrent);
         sortedFiles.clear();
+        selectedFiles.clear();
+        clearViews();
         isSort = false;//초기화 해야 처음에 이동하면 순차정렬
+
 
         File current = new File(mCurrent);
         String[] files = current.list();
@@ -111,10 +137,11 @@ public class FileManager {
                 }
             }
         }
-        mAdapter.notifyDataSetChanged();
-        isSorted();//정렬확인
+        isSorted();//정렬확인 + mAdapter.notifyDataSetChanged()
+
     }
 
+    /** 루트 디렉토리로 이동 */
     public void upRoot() {
         //루트로 이동
         if (mCurrent.compareTo(mRoot) != 0) {
@@ -123,6 +150,7 @@ public class FileManager {
         }
     }
 
+    /** 상위 디렉토리로 이동 */
     public void updir() {
         //상위 디렉토리로 이동
         if (mCurrent.compareTo(mRoot) != 0) {
@@ -132,6 +160,7 @@ public class FileManager {
         }
     }
 
+    /** 순차정렬, 역순정렬 확인 */
     public void isSorted() {
         //정렬이 되었는지 안되었는지 판단해서 동작
 
@@ -179,88 +208,148 @@ public class FileManager {
             }
             isSort = true;
         }
+        clearViews();
         mAdapter.notifyDataSetChanged();
     }
 
-    public String getmCurrent() {
-        return mCurrent;
-    }
-
-    public String getmRoot() {
-        return mRoot;
-    }
-
-    public void setSearchText(String searchText) {
-        this.searchText = searchText;
-    }
-
-    public void setChecked(boolean checked) {
-        isChecked = checked;
-    }
-
-
-    /*삭제기능구현*/
-
-    private final List<String> selectedFiles = new ArrayList<>();
-
-    private static FileManager instance;
-
-    // 선택된 파일을 추가하는 메서드
-    public void addSelectedFile(String filePath) {
-        selectedFiles.add(filePath);
-    }
-    public AppCompatActivity getActivity() {
-        return activity;
-    }
-    //FileManager 인스턴스를 생성하는 정적 메서드
-    public static FileManager getInstance(AppCompatActivity activity, Context context) {
-        if (instance == null) {
-            instance = new FileManager(activity, context);
-        }
-        return instance;
-    }
-
-    //선택된 파일 삭제 메서드
+    /** 파일 삭제 메서드 */
     public void deleteSelectedFiles() {
-        for (String filePath : selectedFiles) {
-            File file = new File(filePath);
-            if (file.delete()) {
-                Log.d("FileManager", "Deleted file: " + filePath);
-            } else {
-                Log.e("FileManager", "Failed to delete file: " + filePath);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            //api 29 이상이면 file.delete()가 작동하지 않음 SAF로 파일 삭제 처리
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+            activity.startActivityForResult(intent, REQUEST_DELETE_FILE);
+
+        } else {
+            //api 29 미만이면 file.delete()로 파일 삭제 처리
+            for (String filePath : selectedFiles) {
+                File file = new File(filePath);
+                if (file.delete()) {
+                    Toast.makeText(activity, "선택된 파일이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                    refreshFiles();
+                }else{
+                    Toast.makeText(activity, "파일 삭제에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                }
             }
         }
-        selectedFiles.clear();
-        refreshFiles();
     }
 
-    private void showToast(String message) {
-        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
+    /** SAF파일처리 관련 메서드 */
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_DELETE_FILE && resultCode == AppCompatActivity.RESULT_OK) {
+            Uri treeUri = data.getData();
+            activity.getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+            DocumentFile rootDir = DocumentFile.fromTreeUri(activity, treeUri);
+
+            for (String filePath : selectedFiles) {
+                String relativePath = filePath.replace(mCurrent, "");
+                if (relativePath.startsWith("/")) {
+                    relativePath = relativePath.substring(1);
+                }
+
+                DocumentFile fileToDelete = findFile(rootDir, relativePath);
+                if (fileToDelete != null && fileToDelete.exists()) {
+                    boolean deleted = fileToDelete.delete();
+                    if (deleted) {
+                        Toast.makeText(activity, "선택된 파일이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(activity, "파일 삭제에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(activity, "파일을 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            refreshFiles();
+        }
     }
 
+    /** 삭제할 파일 찾기 메서드(API29이상) */
+    private DocumentFile findFile(DocumentFile directory, String relativePath) {
+        String[] parts = relativePath.split("/");
+        for (String part : parts) {
+            DocumentFile nextDirectory = directory.findFile(part);
+            if (nextDirectory == null) {
+                // 해당 경로의 파일이나 디렉토리를 찾을 수 없음
+                return null;
+            }
+            directory = nextDirectory;
+        }
+        return directory;
+    }
+
+    /** selectedFiles가 비어있는지 반환하는 메서드 */
     public boolean areFilesSelected() {
         return !selectedFiles.isEmpty();
     }
 
-    public void clearSelectedFiles() {
-        selectedFiles.clear();
-        refreshFiles();
+    /** 롱클릭 선택유무 메서드 */
+    private void toggleFileSelection(String filePath, View view) {
+        if (selectedFiles.contains(filePath)) {
+            selectedFiles.remove(filePath);
+            selectedViews.remove(view);
+            view.setBackgroundColor(Color.WHITE);
+        } else {
+            selectedFiles.add(filePath);
+            selectedViews.add(view);
+            view.setBackgroundColor(Color.LTGRAY);
+        }
+
+        mAdapter.notifyDataSetChanged();
     }
 
-    // 선택된 파일 목록을 반환하는 메서드
+    /** 선택된 view항목들 배경색 초기화 메서드 */
+    private void clearViews(){
+        if(!selectedViews.isEmpty()){
+            for(View view : selectedViews){
+                view.setBackgroundColor(Color.WHITE);
+                Toast.makeText(activity, "파일선택 취소됨", Toast.LENGTH_SHORT).show();
+            }
+            selectedViews.clear();
+        }
+    }
+
+    /** 확장자 추출 메서드 */
+    private String getFileExtension(String fileName){
+        int dotIndex = fileName.lastIndexOf(".");
+        if(dotIndex >= 0 && dotIndex < fileName.length() -1 ){
+            return fileName.substring(dotIndex + 1);
+        }
+        return null;
+    }
+
+    /** 확장자 비교 메서드*/
+    private boolean isSupportedExtension(String extension){
+        String[] supportedExtensions = { "wmv", "flv", "mp4", "mkv", "3gp" };
+        for (String ext : supportedExtensions) {
+            if (ext.equalsIgnoreCase(extension)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+
+    /**
+     * getter
+     * setter
+     * 항목들
+     * */
+    public String getmCurrent() {
+        return mCurrent;
+    }
+    public String getmRoot() {
+        return mRoot;
+    }
     public List<String> getSelectedFiles() {
         return selectedFiles;
     }
-
-    //파일 선택 여부 토글 메서드
-    public void toggleFileSelection(String filePath) {
-        if (selectedFiles.contains(filePath)) {
-            selectedFiles.remove(filePath);
-            showToast("파일 선택 해제됨: " + filePath);
-        } else {
-            selectedFiles.add(filePath);
-            showToast("파일 선택됨: " + filePath);
-        }
-        mAdapter.notifyDataSetChanged();
+    public void setSearchText(String searchText) {
+        this.searchText = searchText;
+    }
+    public void setChecked(boolean checked) {
+        isChecked = checked;
     }
 }

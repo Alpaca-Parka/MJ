@@ -2,13 +2,13 @@ package com.cookandroid.movie;
 
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-
 import android.view.View;
+import android.view.MenuItem;
 
-
-
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -17,14 +17,9 @@ import com.cookandroid.movie.helpers.FileManager;
 import com.cookandroid.movie.helpers.OptionsMenuHelper;
 import com.cookandroid.movie.helpers.PermissionManager;
 
-import android.view.ActionMode;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.AbsListView;
-
 public class MainActivity extends AppCompatActivity {
+    private static final int DELETE_REQUEST_CODE = 42;
     private FileManager fm;
-    private ActionMode actionMode;
     private final DoubleBackPressHandler doubleBackPressHandler = new DoubleBackPressHandler(this);
 
     @Override
@@ -39,9 +34,10 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
 
-        //디렉토리 리스트 생성
+        //파일 매니저 생성
         fm = new FileManager(this,this);
         fm.refreshFiles();
+
     }
 
     public void mOnClick(View v){
@@ -68,10 +64,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return OptionsMenuHelper.onOptionsItemSelected(this, item, fm)
                 || super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        fm.onActivityResult(requestCode, resultCode, data);
     }
 }

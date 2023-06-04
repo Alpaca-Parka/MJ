@@ -12,11 +12,13 @@ public class DoubleBackPressHandler {
     public DoubleBackPressHandler(Activity _activity) {
         this.activity = _activity;
     }
+
     /**뒤로가기키 1번 눌렀을때 동작할 내용*/
     private void showGuide(){
         toast = Toast.makeText(activity, "'뒤로가기' 키를 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT);
         toast.show();
     }
+
     /**뒤로가기키 동작 처리*/
     public void onBackPressed(){
         if(System.currentTimeMillis() > backKeyPressedTime + 2000){

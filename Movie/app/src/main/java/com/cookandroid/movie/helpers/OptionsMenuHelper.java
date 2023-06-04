@@ -12,7 +12,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 
 import com.cookandroid.movie.R;
+
+import java.io.File;
+
 public class OptionsMenuHelper {
+    /** 옵션 메뉴 생성 처리 메서드 */
     public static boolean onCreateOptionsMenu(Menu menu, FileManager fm, Context context){
 
         MenuInflater inflater = ((AppCompatActivity) context).getMenuInflater();
@@ -83,21 +87,22 @@ public class OptionsMenuHelper {
         return true;
 
     }
-    //삭제 버튼 누르면 삭제
+
+    /** 옵션 메뉴 선택 처리 메서드*/
     public static boolean onOptionsItemSelected(AppCompatActivity activity, MenuItem item, FileManager fileManager) {
+        StringBuilder sb = new StringBuilder();
         int id = item.getItemId();
         if (id == R.id.delete_file) {
             if (fileManager.areFilesSelected()) {
+                for (String items : fileManager.getSelectedFiles()){
+                    File file = new File(items);
+                    sb.append(file.getName());
+                    sb.append("\n");
+                }
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                builder.setMessage("정말로 선택된 파일을 삭제하시겠습니까?")
-                        .setPositiveButton("예", (dialog, which) -> {
-                            fileManager.deleteSelectedFiles();
-                            fileManager.clearSelectedFiles();
-                            Toast.makeText(activity, "선택된 파일이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
-                        })
-                        .setNegativeButton("아니오", (dialog, which) -> {
-                            dialog.dismiss();
-                        });
+                builder.setMessage(sb + "다음과 같은 선택된 파일들을 삭제하시겠습니까?")
+                        .setPositiveButton("예", (dialog, which) -> fileManager.deleteSelectedFiles())
+                        .setNegativeButton("아니오", (dialog, which) -> dialog.dismiss());
                 AlertDialog dialog = builder.create();
                 dialog.show();
             } else {
