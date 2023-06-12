@@ -9,7 +9,9 @@ Mobile Project
     파일 관련 메소드 별도의 클래스로 분리
     onCreateOptionsMenuItem(Menu menu)별도의 클래스로 분리
     폴더 우선 정렬 체크박스 만듦
-    
+    확장자 확인 처리 기능
+    파일 삭제 기능 수정
+    saf로 파일 삭제 기능
     
 
 
